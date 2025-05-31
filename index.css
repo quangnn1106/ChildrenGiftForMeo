@@ -441,7 +441,7 @@
           #90EE90 200px);
         border-radius: 4px;
         box-shadow: 0 2px 10px rgba(139, 69, 19, 0.3);
-        animation: pathwayMove 8s linear infinite;
+        animation: pathwayMove 17s linear infinite;
         
         overflow: visible;
       }      /* Grass on pathway */
@@ -481,7 +481,7 @@
         left: 0;
         width: 300%;
         height: 20px;
-        animation: pathwayMove 8s linear infinite;
+        animation: pathwayMove 17s linear infinite;
         opacity: 0.8;
         z-index: 1;
       }
@@ -534,7 +534,7 @@
         left: 0;
         width: 300%;
         height: 30px;
-        animation: pathwayMove 8s linear infinite;
+        animation: pathwayMove 17s linear infinite;
         opacity: 0.7;
         z-index: 2;
       }
@@ -548,7 +548,7 @@
         left: 0;
         width: 300%;
         height: 25px;
-        animation: pathwayMove 8s linear infinite;
+        animation: pathwayMove 17s linear infinite;
         opacity: 0.6;
         z-index: 1;
       }
