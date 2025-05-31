@@ -1,0 +1,947 @@
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Pacifico&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: linear-gradient(45deg, #ff9a9e, #fecfef, #fecfef, #ff9a9e);
+        background-size: 400% 400%;
+        animation: gradientShift 6s ease infinite;
+        min-height: 100vh;
+        font-family: "Dancing Script", cursive;
+        overflow-x: hidden;
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* Hearts floating animation */
+      .hearts {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .heart {
+        color: #ff69b4;
+        font-size: 20px;
+        position: absolute;
+        animation: float 6s linear infinite;
+        opacity: 0.7;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(100vh) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.7;
+        }
+        90% {
+          opacity: 0.7;
+        }
+        100% {
+          transform: translateY(-100px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Gift box container */
+      .gift-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        position: relative;
+        z-index: 2;
+      }
+
+      .gift-box {
+        position: relative;
+        cursor: pointer;
+        transform-style: preserve-3d;
+        transition: all 0.6s ease;
+        animation: bounce 2s ease-in-out infinite;
+      }
+
+      @keyframes bounce {
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+          transform: translateY(0) scale(1);
+        }
+        40% {
+          transform: translateY(-20px) scale(1.05);
+        }
+        60% {
+          transform: translateY(-10px) scale(1.02);
+        }
+      }
+
+      .gift-box:hover {
+        transform: scale(1.1) rotateY(10deg);
+        animation: none;
+      }
+
+      .box-base {
+        width: 150px;
+        height: 120px;
+        background: linear-gradient(135deg, #ff69b4, #ff1493);
+        border-radius: 15px;
+        position: relative;
+        box-shadow: 0 20px 40px rgba(255, 105, 180, 0.4);
+      }
+
+      .box-lid {
+        width: 160px;
+        height: 40px;
+        background: linear-gradient(135deg, #ff1493, #dc143c);
+        border-radius: 15px;
+        position: absolute;
+        top: -20px;
+        left: -5px;
+        transition: all 0.6s ease;
+        box-shadow: 0 10px 20px rgba(220, 20, 60, 0.3);
+      }
+
+      .ribbon-v {
+        width: 20px;
+        height: 140px;
+        background: linear-gradient(135deg, #ffd700, #ffb347);
+        position: absolute;
+        left: 50%;
+        top: -10px;
+        transform: translateX(-50%);
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+      }
+
+      .ribbon-h {
+        width: 180px;
+        height: 20px;
+        background: linear-gradient(135deg, #ffd700, #ffb347);
+        position: absolute;
+        top: 50px;
+        left: -15px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+      }
+
+      .bow {
+        width: 60px;
+        height: 40px;
+        background: linear-gradient(135deg, #ffd700, #ffb347);
+        border-radius: 50%;
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0 8px 20px rgba(255, 215, 0, 0.5);
+      }
+
+      .bow::before,
+      .bow::after {
+        content: "";
+        position: absolute;
+        width: 25px;
+        height: 30px;
+        background: linear-gradient(135deg, #ffd700, #ffb347);
+        border-radius: 50% 50% 50% 0;
+        top: 5px;
+      }
+
+      .bow::before {
+        left: -15px;
+        transform: rotate(-45deg);
+      }
+
+      .bow::after {
+        right: -15px;
+        transform: rotate(45deg);
+      }      /* Letter styles */
+      .letter-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        /* background: rgba(0, 0, 0, 0.8); */
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+        /* backdrop-filter: blur(10px); */
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      .letter {
+        width: 600px;
+        height: 450px;
+        max-width: 90vw;
+        max-height: 85vh;
+        background: linear-gradient(135deg, #fffef7, #fef9e7);
+        border-radius: 20px;
+        position: relative;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        transform: scale(0) rotate(180deg);
+        transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        border: 3px solid #ff69b4;
+        overflow: hidden;
+      }
+
+      .letter.show {
+        transform: scale(1) rotate(0deg);
+      }
+
+      .letter::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: repeating-linear-gradient(
+          90deg,
+          #ff69b4 0px,
+          #ff69b4 10px,
+          #ffd700 10px,
+          #ffd700 20px
+        );
+      }
+
+      .letter-content {
+        padding: 40px;
+        height: 100%;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .message {
+        font-size: 24px;
+        line-height: 1.8;
+        color: #d63384;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .message-line {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+
+      .signature {
+        font-family: "Pacifico", cursive;
+        font-size: 28px;
+        color: #dc143c;
+        text-align: right;
+        margin-top: 30px;
+        opacity: 0;
+        transform: translateX(50px);
+      }      /* Hello Kitty animations - positioned around the letter */
+      .hello-kitty {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        z-index: 15;
+        /* Ensure they don't overflow */
+        max-width: 15vw;
+        max-height: 15vh;
+        min-width: 50px;
+        min-height: 50px;
+        /* Prevent overflow during animations */
+        overflow: visible;
+        will-change: transform;
+      }
+
+      /* Style for Hello Kitty images */
+      .hello-kitty img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        /* Prevent image distortion */
+        image-rendering: auto;
+        /* Smooth animations */
+        transition: transform 0.3s ease;
+      }.kitty-top-left {
+        top: 14%;
+        left: 28%;
+        animation: dance1 3s ease-in-out infinite;
+      }
+
+      .kitty-top-right {
+        top: 14%;
+        left: 66%;
+        animation: dance2 3s ease-in-out infinite 0.5s;
+      }
+
+      .kitty-bottom-left {
+        bottom: 13%;
+        left: 28%;
+        animation: dance3 3s ease-in-out infinite 1s;
+      }      .kitty-bottom-right {
+        bottom: 15%;
+        right: 27%;
+        animation: dance4 3s ease-in-out infinite 1.5s;
+      }
+
+      @keyframes dance1 {
+        0%,
+        100% {
+          transform: rotate(-10deg) scale(1) translateY(0px);
+        }
+        25% {
+          transform: rotate(10deg) scale(1.1) translateY(-8px);
+        }
+        50% {
+          transform: rotate(-5deg) scale(0.95) translateY(5px);
+        }
+        75% {
+          transform: rotate(5deg) scale(1.05) translateY(-3px);
+        }
+      }
+
+      @keyframes dance2 {
+        0%,
+        100% {
+          transform: rotate(10deg) scale(1) translateY(0px);
+        }
+        25% {
+          transform: rotate(-10deg) scale(1.08) translateY(-10px);
+        }
+        50% {
+          transform: rotate(5deg) scale(0.92) translateY(8px);
+        }
+        75% {
+          transform: rotate(-5deg) scale(1.03) translateY(-5px);
+        }
+      }
+
+      @keyframes dance3 {
+        0%,
+        100% {
+          transform: rotate(5deg) scale(1) translateY(0) translateX(0);
+        }
+        25% {
+          transform: rotate(-5deg) scale(1.05) translateY(-10px) translateX(5px);
+        }
+        50% {
+          transform: rotate(8deg) scale(0.95) translateY(5px) translateX(-3px);
+        }
+        75% {
+          transform: rotate(-8deg) scale(1.02) translateY(-5px) translateX(3px);
+        }
+      }
+
+      @keyframes dance4 {
+        0%,
+        100% {
+          transform: rotate(-5deg) scale(1) translateY(0) translateX(0);
+        }
+        25% {
+          transform: rotate(5deg) scale(1.06) translateY(-12px) translateX(-5px);
+        }
+        50% {
+          transform: rotate(-8deg) scale(0.94) translateY(7px) translateX(4px);
+        }
+        75% {
+          transform: rotate(8deg) scale(1.01) translateY(-3px) translateX(-2px);
+        }
+      }
+
+      /* Hello Kitty SVG styles */
+      .hello-kitty svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Close button */
+      .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: #ff69b4;
+        color: white;
+        border: none;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        z-index: 15;
+      }
+
+      .close-btn:hover {
+        background: #ff1493;
+        transform: rotate(90deg) scale(1.1);
+      }
+
+      /* Sparkles */
+      .sparkle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: #ffd700;
+        border-radius: 50%;
+        animation: sparkle 2s linear infinite;
+      }      @keyframes sparkle {
+        0%,
+        100% {
+          opacity: 0;
+          transform: scale(0) rotate(0deg);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1) rotate(180deg);
+        }
+      }      /* Pathway with walking Hello Kitty friends */
+      .pathway-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 150px;
+        z-index: 5;
+        pointer-events: none;
+        display: none; /* Hidden by default */
+      }      .pathway {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        width: 200%;
+        height: 12px;
+        background: repeating-linear-gradient(to right,
+          #90EE90 0px,
+          #32CD32 50px, 
+          #8B4513 100px,
+          #A0522D 150px,
+          #90EE90 200px);
+        border-radius: 4px;
+        box-shadow: 0 2px 10px rgba(139, 69, 19, 0.3);
+        animation: pathwayMove 8s linear infinite;
+        
+        overflow: visible;
+      }      /* Grass on pathway */
+      .pathway::before {
+        content: "";
+        position: absolute;
+        top: -8px;
+        left: 0;
+        width: 100%;
+        height: 8px;
+        background: repeating-linear-gradient(
+          90deg,
+          transparent 0px,
+          transparent 2px,
+          #228B22 2px,
+          #228B22 3px,
+          transparent 3px,
+          transparent 8px,
+          #32CD32 8px,
+          #32CD32 9px,
+          transparent 9px,
+          transparent 12px,
+          #90EE90 12px,
+          #90EE90 13px,
+          transparent 13px,
+          transparent 18px
+        );
+        animation: grassSway 2s ease-in-out infinite;
+      }/* Individual grass blades */
+      .pathway::after {
+        content: "";
+        display: none; /* Remove emoji grass */
+      }      /* SVG Grass styling */
+      .grass-svg {
+        position: absolute;
+        top: -20px;
+        left: 0;
+        width: 300%;
+        height: 20px;
+        animation: pathwayMove 8s linear infinite;
+        opacity: 0.8;
+        z-index: 1;
+      }
+
+      .grass-blades {
+        animation: grassSway 2s ease-in-out infinite;
+        transform-origin: bottom;
+      }
+
+      @keyframes grassSway {
+        0%, 100% {
+          transform: scaleY(1) skewX(0deg);
+        }
+        25% {
+          transform: scaleY(1.1) skewX(2deg);
+        }
+        50% {
+          transform: scaleY(0.9) skewX(0deg);
+        }
+        75% {
+          transform: scaleY(1.1) skewX(-2deg);
+        }
+      }      @keyframes pathwayMove {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
+      @keyframes pathwayShimmer {
+        0%, 100% {
+          opacity: 0.7;
+          transform: scaleY(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scaleY(1.2);
+        }
+      }.walking-friends {
+        position: absolute;
+        bottom: 30px;
+        width: 100%;
+        height: 60px;
+      }      /* SVG Flowers styling */
+      .flowers-svg {
+        position: absolute;
+        bottom: 45px;
+        left: 0;
+        width: 300%;
+        height: 30px;
+        animation: pathwayMove 8s linear infinite;
+        opacity: 0.7;
+        z-index: 2;
+      }
+
+      .flowers {
+        animation: flowerBob 3s ease-in-out infinite;
+      }      /* SVG Leaves styling */
+      .leaves-svg {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        width: 300%;
+        height: 25px;
+        animation: pathwayMove 8s linear infinite;
+        opacity: 0.6;
+        z-index: 1;
+      }
+
+      .leaves {
+        animation: leafSway 4s ease-in-out infinite;
+      }      @keyframes flowerBob {
+        0%, 100% {
+          transform: translateY(0) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-2px) rotate(2deg);
+        }
+      }
+
+      /* Add leaf swaying animation */
+      @keyframes leafSway {
+        0%, 100% {
+          transform: rotate(0deg);
+        }
+        25% {
+          transform: rotate(5deg);
+        }
+        75% {
+          transform: rotate(-5deg);
+        }
+      }.friend {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        animation: friendWalking 1.5s ease-in-out infinite;
+      }
+
+      .friend img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+      }      .friend-1 {
+        animation-delay: 0s;
+        bottom: 0px;
+        left: 73%;
+      }
+
+      .friend-2 {
+        animation-delay: -0.5s;
+        bottom: 5px;
+        left: 35%;
+      }
+
+      .friend-3 {
+        animation-delay: -1s;
+        bottom: -2px;
+        left: 55%;
+      }      .friend-4 {
+        animation-delay: -1.5s;
+        bottom: -107px;
+        left: 8%;
+        width: 300px;
+        height: 300px;
+        animation: friendWalkingReverse 1.5s ease-in-out infinite;
+      }      @keyframes friendWalking {
+        0%, 100% {
+          transform: translateY(0) rotate(-2deg) scale(1);
+        }
+        25% {
+          transform: translateY(-3px) rotate(2deg) scale(1.02);
+        }
+        50% {
+          transform: translateY(0) rotate(-1deg) scale(0.98);
+        }
+        75% {
+          transform: translateY(-2px) rotate(1deg) scale(1.01);
+        }
+      }
+
+      @keyframes friendWalkingReverse {
+        0%, 100% {
+          transform: translateY(0) rotate(2deg) scale(1) scaleX(-1);
+        }
+        25% {
+          transform: translateY(-3px) rotate(-2deg) scale(1.02) scaleX(-1);
+        }
+        50% {
+          transform: translateY(0) rotate(1deg) scale(0.98) scaleX(-1);
+        }
+        75% {
+          transform: translateY(-2px) rotate(-1deg) scale(1.01) scaleX(-1);
+        }
+      }/* Responsive Design */
+      
+      /* Tablets and small laptops */
+      @media (max-width: 1024px) {
+        .letter {
+          width: 85%;
+          height: 65%;
+        }
+        
+        .hello-kitty {
+          width: 90px;
+          height: 90px;
+        }
+        
+        .kitty-top-left {
+          top: 10%;
+          left: 20%;
+        }
+
+        .kitty-top-right {
+          top: 10%;
+          right: 20%;
+        }
+
+        .kitty-bottom-left {
+          bottom: 10%;
+          left: 20%;
+        }
+
+        .kitty-bottom-right {
+          bottom: 10%;
+          right: 20%;
+        }
+      }
+
+      /* Mobile landscape and small tablets */
+      @media (max-width: 768px) {
+        .letter {
+          width: 90%;
+          height: 70%;
+          margin: 20px;
+        }
+
+        .letter-content {
+          padding: 20px;
+        }
+
+        .message {
+          font-size: 18px;
+        }
+
+        .signature {
+          font-size: 22px;
+        }
+
+        .hello-kitty {
+          width: 70px;
+          height: 70px;
+        }
+
+        .kitty-top-left {
+          top: 8%;
+          left: 15%;
+        }
+
+        .kitty-top-right {
+          top: 8%;
+          right: 15%;
+        }
+
+        .kitty-bottom-left {
+          bottom: 8%;
+          left: 15%;
+        }
+
+        .kitty-bottom-right {
+          bottom: 8%;
+          right: 15%;
+        }        /* Adjust pathway for mobile */
+        .pathway-container {
+          height: 120px;
+        }
+        
+        .pathway {
+          height: 10px;
+        }
+        
+        .grass-svg {
+          height: 15px;
+          top: -15px;
+        }
+        
+        .flowers-svg {
+          height: 25px;
+          bottom: 35px;
+        }
+        
+        .leaves-svg {
+          height: 20px;
+        }
+        
+        .friend {
+          width: 40px;
+          height: 40px;
+        }
+
+         .friend-4 {
+          width: 120px;
+          height: 120px;
+          bottom: -50px;
+          left: 8%;
+        }
+        
+        .friend-1 {
+          left: 10%;
+        }
+        
+        .friend-2 {
+          left: 30%;
+        }
+        
+        .friend-3 {
+          left: 50%;
+        }
+        
+
+      }
+
+      /* Mobile portrait */
+      @media (max-width: 480px) {
+        .letter {
+          width: 95%;
+          height: 75%;
+          margin: 10px;
+        }
+
+        .letter-content {
+          padding: 15px;
+        }
+
+        .message {
+          font-size: 16px;
+          line-height: 1.6;
+        }
+
+        .signature {
+          font-size: 20px;
+          margin-top: 20px;
+        }
+
+        .hello-kitty {
+          width: 60px;
+          height: 60px;
+        }
+
+        .kitty-top-left {
+          top: 5%;
+          left: 10%;
+        }
+
+        .kitty-top-right {
+          top: 5%;
+          right: 10%;
+        }
+
+        .kitty-bottom-left {
+          bottom: 5%;
+          left: 10%;
+        }
+
+        .kitty-bottom-right {
+          bottom: 5%;
+          right: 10%;
+        }        /* Adjust pathway for small mobile */
+        .pathway-container {
+          height: 100px;
+        }
+        
+        .pathway {
+          height: 8px;
+        }
+        
+        .grass-svg {
+          height: 12px;
+          top: -12px;
+        }
+        
+        .flowers-svg {
+          height: 20px;
+          bottom: 30px;
+        }
+        
+        .leaves-svg {
+          height: 15px;
+        }
+        
+        .friend {
+          width: 35px;
+          height: 35px;
+        }
+        
+        .friend-1 {
+          left: 8%;
+        }
+        
+        .friend-2 {
+          left: 28%;
+        }
+        
+        .friend-3 {
+          left: 48%;
+        }
+        
+        .friend-4 {
+          width: 100px;
+          height: 100px;
+          bottom: -40px;
+          left: 68%;
+        }
+        
+        .close-btn {
+          width: 30px;
+          height: 30px;
+          font-size: 16px;
+          top: 10px;
+          right: 15px;
+        }
+      }
+
+      /* Very small mobile screens */
+      @media (max-width: 360px) {
+        .hello-kitty {
+          width: 50px;
+          height: 50px;
+        }
+
+        .kitty-top-left {
+          top: 3%;
+          left: 8%;
+        }
+
+        .kitty-top-right {
+          top: 3%;
+          right: 8%;
+        }
+
+        .kitty-bottom-left {
+          bottom: 3%;
+          left: 8%;
+        }
+
+        .kitty-bottom-right {
+          bottom: 3%;
+          right: 8%;
+        }
+        
+        .message {
+          font-size: 14px;
+        }
+        
+        .signature {
+          font-size: 18px;
+        }        .friend {
+          width: 30px;
+          height: 30px;
+        }
+        
+        .friend-1 {
+          left: 5%;
+        }
+        
+        .friend-2 {
+          left: 25%;
+        }
+        
+        .friend-3 {
+          left: 45%;
+        }
+        
+        .friend-4 {
+          width: 80px;
+          height: 80px;
+          bottom: -30px;
+          left: 65%;
+        }
+        
+        .pathway {
+          height: 6px;
+        }
+        
+        .grass-svg {
+          height: 10px;
+          top: -10px;
+        }
+        
+        .flowers-svg {
+          height: 15px;
+          bottom: 25px;
+        }
+        
+        .leaves-svg {
+          height: 12px;
+        }
+      }
+
+
+      
