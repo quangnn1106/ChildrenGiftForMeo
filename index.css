@@ -61,9 +61,7 @@
           transform: translateY(-100px) rotate(360deg);
           opacity: 0;
         }
-      }
-
-      /* Gift box container */
+      }      /* Gift box container */
       .gift-container {
         display: flex;
         justify-content: center;
@@ -71,14 +69,42 @@
         min-height: 100vh;
         position: relative;
         z-index: 2;
-      }
-
-      .gift-box {
+        will-change: transform, left, top; /* Optimize for smooth position changes */
+      }.gift-box {
         position: relative;
         cursor: pointer;
         transform-style: preserve-3d;
         transition: all 0.6s ease;
         animation: bounce 2s ease-in-out infinite;
+        pointer-events: auto; /* Ensure default state allows clicks */
+        will-change: transform; /* Optimize for smooth animations */
+        backface-visibility: hidden; /* Reduce flickering */
+      }      /* Running away animation */
+      .gift-box.running {
+        animation: runAway 0.2s ease-in-out infinite;
+        cursor: not-allowed !important;
+        pointer-events: none !important;
+        z-index: 999;
+        will-change: transform; /* Optimize for rapid transform changes */
+      }
+
+      @keyframes runAway {
+        0% { transform: translateX(0) translateY(0) rotate(0deg) scale(1); }
+        20% { transform: translateX(8px) translateY(-5px) rotate(2deg) scale(0.98); }
+        40% { transform: translateX(-12px) translateY(2px) rotate(-3deg) scale(1.02); }
+        60% { transform: translateX(15px) translateY(-8px) rotate(4deg) scale(0.96); }
+        80% { transform: translateX(-10px) translateY(3px) rotate(-2deg) scale(1.04); }
+        100% { transform: translateX(5px) translateY(-2px) rotate(1deg) scale(1); }
+      }
+
+      /* Panicked shaking when running */
+      .gift-box.running .bow {
+        animation: bowPanic 0.1s ease-in-out infinite;
+      }
+
+      @keyframes bowPanic {
+        0%, 100% { transform: translateX(-50%) rotate(0deg); }
+        50% { transform: translateX(-50%) rotate(2deg) scale(1.1); }
       }
 
       @keyframes bounce {
@@ -95,11 +121,19 @@
         60% {
           transform: translateY(-10px) scale(1.02);
         }
-      }
-
-      .gift-box:hover {
+      }      .gift-box:hover:not(.running) {
         transform: scale(1.1) rotateY(10deg);
         animation: none;
+      }
+
+      /* Add a subtle indication that the gift box is now safe to click */
+      .gift-box:not(.running) {
+        transition: all 0.3s ease;
+      }
+
+      .gift-box:not(.running):hover {
+        box-shadow: 0 25px 50px rgba(255, 105, 180, 0.6);
+        transform: scale(1.1) rotateY(10deg);
       }
 
       .box-base {
@@ -272,7 +306,14 @@
         min-height: 50px;
         /* Prevent overflow during animations */
         overflow: visible;
+        /* Hardware acceleration optimizations */
         will-change: transform;
+        backface-visibility: hidden;
+        transform-style: preserve-3d;
+        /* Initial state for synchronized entrance */
+        opacity: 0;
+        transform: scale(0.3) translateY(20px);
+        animation-fill-mode: both;
       }
 
       /* Style for Hello Kitty images */
@@ -282,91 +323,87 @@
         object-fit: contain;
         /* Prevent image distortion */
         image-rendering: auto;
-        /* Smooth animations */
-        transition: transform 0.3s ease;
-      }.kitty-top-left {
+        /* Hardware acceleration for smooth transitions */
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+      }
+
+      /* Synchronized entrance and dance animations */
+      .kitty-top-left {
         top: 14%;
         left: 28%;
-        animation: dance1 3s ease-in-out infinite;
+        animation: 
+          kittyEntrance 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s both,
+          syncDance 4s ease-in-out 1.7s infinite;
       }
 
       .kitty-top-right {
         top: 14%;
         left: 66%;
-        animation: dance2 3s ease-in-out infinite 0.5s;
+        animation: 
+          kittyEntrance 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.7s both,
+          syncDance 4s ease-in-out 1.9s infinite;
       }
 
       .kitty-bottom-left {
         bottom: 13%;
         left: 28%;
-        animation: dance3 3s ease-in-out infinite 1s;
-      }      .kitty-bottom-right {
+        animation: 
+          kittyEntrance 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.9s both,
+          syncDance 4s ease-in-out 2.1s infinite;
+      }
+
+      .kitty-bottom-right {
         bottom: 15%;
         right: 27%;
-        animation: dance4 3s ease-in-out infinite 1.5s;
-      }
-
-      @keyframes dance1 {
-        0%,
+        animation: 
+          kittyEntrance 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1.1s both,
+          syncDance 4s ease-in-out 2.3s infinite;
+      }      /* Synchronized entrance animation for all Hello Kitty characters */
+      @keyframes kittyEntrance {
+        0% {
+          opacity: 0;
+          transform: scale(0.3) translateY(20px) rotate(0deg);
+        }
+        60% {
+          opacity: 0.8;
+          transform: scale(1.1) translateY(-5px) rotate(5deg);
+        }
+        80% {
+          opacity: 1;
+          transform: scale(0.95) translateY(2px) rotate(-2deg);
+        }
         100% {
-          transform: rotate(-10deg) scale(1) translateY(0px);
-        }
-        25% {
-          transform: rotate(10deg) scale(1.1) translateY(-8px);
-        }
-        50% {
-          transform: rotate(-5deg) scale(0.95) translateY(5px);
-        }
-        75% {
-          transform: rotate(5deg) scale(1.05) translateY(-3px);
-        }
-      }
-
-      @keyframes dance2 {
-        0%,
-        100% {
-          transform: rotate(10deg) scale(1) translateY(0px);
-        }
-        25% {
-          transform: rotate(-10deg) scale(1.08) translateY(-10px);
-        }
-        50% {
-          transform: rotate(5deg) scale(0.92) translateY(8px);
-        }
-        75% {
-          transform: rotate(-5deg) scale(1.03) translateY(-5px);
+          opacity: 1;
+          transform: scale(1) translateY(0px) rotate(0deg);
         }
       }
 
-      @keyframes dance3 {
-        0%,
-        100% {
-          transform: rotate(5deg) scale(1) translateY(0) translateX(0);
+      /* Unified synchronized dance animation */
+      @keyframes syncDance {
+        0%, 100% {
+          transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+        }
+        12.5% {
+          transform: translate3d(-2px, -8px, 0) rotate(-5deg) scale(1.05);
         }
         25% {
-          transform: rotate(-5deg) scale(1.05) translateY(-10px) translateX(5px);
+          transform: translate3d(0, -12px, 0) rotate(0deg) scale(1.1);
+        }
+        37.5% {
+          transform: translate3d(2px, -8px, 0) rotate(5deg) scale(1.05);
         }
         50% {
-          transform: rotate(8deg) scale(0.95) translateY(5px) translateX(-3px);
+          transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+        }
+        62.5% {
+          transform: translate3d(-1px, 3px, 0) rotate(-3deg) scale(0.95);
         }
         75% {
-          transform: rotate(-8deg) scale(1.02) translateY(-5px) translateX(3px);
+          transform: translate3d(0, 5px, 0) rotate(0deg) scale(0.9);
         }
-      }
-
-      @keyframes dance4 {
-        0%,
-        100% {
-          transform: rotate(-5deg) scale(1) translateY(0) translateX(0);
-        }
-        25% {
-          transform: rotate(5deg) scale(1.06) translateY(-12px) translateX(-5px);
-        }
-        50% {
-          transform: rotate(-8deg) scale(0.94) translateY(7px) translateX(4px);
-        }
-        75% {
-          transform: rotate(8deg) scale(1.01) translateY(-3px) translateX(-2px);
+        87.5% {
+          transform: translate3d(1px, 3px, 0) rotate(3deg) scale(0.95);
         }
       }
 
@@ -427,7 +464,9 @@
         z-index: 5;
         pointer-events: none;
         display: none; /* Hidden by default */
-      }      .pathway {
+        opacity: 0; /* Start invisible for smooth fade-in */
+        transition: opacity 0.8s ease-in-out;
+      }.pathway {
         position: absolute;
         bottom: 20px;
         left: 0;
@@ -441,10 +480,12 @@
           #90EE90 200px);
         border-radius: 4px;
         box-shadow: 0 2px 10px rgba(139, 69, 19, 0.3);
-        animation: pathwayMove 17s linear infinite;
-        
+        animation: pathwayMove 20s linear infinite;
         overflow: visible;
-      }      /* Grass on pathway */
+        /* Hardware acceleration for smooth movement */
+        will-change: transform;
+        backface-visibility: hidden;
+      }/* Grass on pathway */
       .pathway::before {
         content: "";
         position: absolute;
@@ -481,9 +522,12 @@
         left: 0;
         width: 300%;
         height: 20px;
-        animation: pathwayMove 17s linear infinite;
+        animation: pathwayMove 20s linear infinite;
         opacity: 0.8;
         z-index: 1;
+        /* Hardware acceleration */
+        will-change: transform;
+        backface-visibility: hidden;
       }
 
       .grass-blades {
@@ -521,12 +565,14 @@
         50% {
           opacity: 1;
           transform: scaleY(1.2);
-        }
-      }.walking-friends {
+        }      }.walking-friends {
         position: absolute;
         bottom: 30px;
         width: 100%;
         height: 60px;
+        /* Hardware acceleration for walking friends container */
+        will-change: transform;
+        backface-visibility: hidden;
       }      /* SVG Flowers styling */
       .flowers-svg {
         position: absolute;
@@ -534,9 +580,12 @@
         left: 0;
         width: 300%;
         height: 30px;
-        animation: pathwayMove 17s linear infinite;
+        animation: pathwayMove 20s linear infinite;
         opacity: 0.7;
         z-index: 2;
+        /* Hardware acceleration */
+        will-change: transform;
+        backface-visibility: hidden;
       }
 
       .flowers {
@@ -548,9 +597,12 @@
         left: 0;
         width: 300%;
         height: 25px;
-        animation: pathwayMove 17s linear infinite;
+        animation: pathwayMove 20s linear infinite;
         opacity: 0.6;
         z-index: 1;
+        /* Hardware acceleration */
+        will-change: transform;
+        backface-visibility: hidden;
       }
 
       .leaves {
@@ -574,12 +626,16 @@
         }
         75% {
           transform: rotate(-5deg);
-        }
-      }.friend {
+        }      }.friend {
         position: absolute;
         width: 50px;
         height: 50px;
-        animation: friendWalking 1.5s ease-in-out infinite;
+        /* Synchronized walking animation with better timing */
+        animation: syncWalking 2s ease-in-out infinite;
+        /* Hardware acceleration optimizations */
+        will-change: transform;
+        backface-visibility: hidden;
+        transform-style: preserve-3d;
       }
 
       .friend img {
@@ -587,56 +643,75 @@
         height: 100%;
         object-fit: contain;
         filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
-      }      .friend-1 {
-        animation-delay: 0s;
+        /* Hardware acceleration for images */
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+      }      /* Synchronized positioning with smooth delays */
+      .friend-1 {
         bottom: 0px;
         left: 73%;
+        animation-delay: 0s;
       }
 
       .friend-2 {
-        animation-delay: -0.5s;
         bottom: 5px;
         left: 35%;
+        animation-delay: -0.5s;
       }
 
       .friend-3 {
-        animation-delay: -1s;
         bottom: -2px;
         left: 55%;
-      }      .friend-4 {
-        animation-delay: -1.5s;
+        animation-delay: -1s;
+      }
+
+      .friend-4 {
         bottom: -107px;
         left: 8%;
         width: 300px;
         height: 300px;
-        animation: friendWalkingReverse 1.5s ease-in-out infinite;
-      }      @keyframes friendWalking {
+        animation: syncWalkingLarge 2s ease-in-out infinite -1.5s;
+      }      /* Synchronized walking animations for smooth movement */
+      @keyframes syncWalking {
         0%, 100% {
-          transform: translateY(0) rotate(-2deg) scale(1);
+          transform: translate3d(0, 0, 0) rotate(-2deg) scale(1);
         }
-        25% {
-          transform: translateY(-3px) rotate(2deg) scale(1.02);
+        16.67% {
+          transform: translate3d(0, -4px, 0) rotate(1deg) scale(1.03);
+        }
+        33.33% {
+          transform: translate3d(0, -2px, 0) rotate(-1deg) scale(1.01);
         }
         50% {
-          transform: translateY(0) rotate(-1deg) scale(0.98);
+          transform: translate3d(0, 0, 0) rotate(2deg) scale(0.98);
         }
-        75% {
-          transform: translateY(-2px) rotate(1deg) scale(1.01);
+        66.67% {
+          transform: translate3d(0, -3px, 0) rotate(-1deg) scale(1.02);
+        }
+        83.33% {
+          transform: translate3d(0, -1px, 0) rotate(1deg) scale(1.01);
         }
       }
 
-      @keyframes friendWalkingReverse {
+      /* Synchronized large friend animation (friend-4) */
+      @keyframes syncWalkingLarge {
         0%, 100% {
-          transform: translateY(0) rotate(2deg) scale(1) scaleX(-1);
+          transform: translate3d(0, 0, 0) rotate(2deg) scale(1) scaleX(-1);
         }
-        25% {
-          transform: translateY(-3px) rotate(-2deg) scale(1.02) scaleX(-1);
+        16.67% {
+          transform: translate3d(0, -6px, 0) rotate(-1deg) scale(1.04) scaleX(-1);
+        }
+        33.33% {
+          transform: translate3d(0, -3px, 0) rotate(1deg) scale(1.02) scaleX(-1);
         }
         50% {
-          transform: translateY(0) rotate(1deg) scale(0.98) scaleX(-1);
+          transform: translate3d(0, 0, 0) rotate(-2deg) scale(0.98) scaleX(-1);
         }
-        75% {
-          transform: translateY(-2px) rotate(-1deg) scale(1.01) scaleX(-1);
+        66.67% {
+          transform: translate3d(0, -4px, 0) rotate(1deg) scale(1.03) scaleX(-1);
+        }
+        83.33% {
+          transform: translate3d(0, -2px, 0) rotate(-1deg) scale(1.01) scaleX(-1);
         }
       }/* Responsive Design */
       
@@ -944,4 +1019,3 @@
       }
 
 
-      
