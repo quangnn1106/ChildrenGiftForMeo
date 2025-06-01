@@ -818,6 +818,110 @@
         </div>
       </div>
     </div>
+    <!-- Quiz Container -->
+    <div class="quiz-container" id="quizContainer">
+      <div class="quiz-content">
+        <div class="quiz-header">
+          <h2>🎯 Quiz nhỏ để nhận quà nha bé Mèo! 🎯</h2>
+          <p>Trả lời đúng để mở hộp quà nhé! 💝</p>
+        </div>
+
+        <div class="quiz-questions">
+          <!-- Question 1: Birthday -->
+          <div class="question-item active" data-question="1">
+            <h3>📅 Sinh nhật của anh là ngày nào?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="wrong">
+                10/06/2002
+              </button>
+              <button class="quiz-option" data-answer="correct">
+                11/06/2002
+              </button>
+              <button class="quiz-option" data-answer="wrong">
+                12/06/2002
+              </button>
+              <button class="quiz-option" data-answer="wrong">
+                11/05/2002
+              </button>
+            </div>
+          </div>
+
+          <!-- Question 2: Shoe Size -->
+          <div class="question-item" data-question="2">
+            <h3>👟 Size giày của anh là bao nhiêu?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="wrong">42</button>
+              <button class="quiz-option" data-answer="correct">43</button>
+              <button class="quiz-option" data-answer="wrong">44</button>
+              <button class="quiz-option" data-answer="wrong">41</button>
+            </div>
+          </div>
+
+          <!-- Question 3: Freelance Project -->
+          <div class="question-item" data-question="3">
+            <h3>💻 Dự án freelance anh đang làm là gì?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="wrong">
+                E-commerce Website
+              </button>
+              <button class="quiz-option" data-answer="correct">
+                Homestay Booking Rooms
+              </button>
+              <button class="quiz-option" data-answer="wrong">
+                Restaurant Management
+              </button>
+              <button class="quiz-option" data-answer="wrong">
+                Social Media App
+              </button>
+            </div>
+          </div>
+
+          <!-- Question 4: Love Question -->
+          <div class="question-item" data-question="4">
+            <h3>💕 Anh thích bộ phận nào trên cơ thể em nhất</h3>
+            <div class="quiz-input">
+              <textarea
+                class="love-input"
+                placeholder="Nhập câu trả lời của em ở đây..."
+                rows="3"
+                maxlength="200"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Question 5: Love Level -->
+          <div class="question-item" data-question="5">
+            <h3>❤️ Em yêu anh mức nào?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="wrong">Yêu nhiều</button>
+              <button class="quiz-option" data-answer="wrong">Yêu lắm</button>
+              <button class="quiz-option" data-answer="correct">
+                Yêu vai lon
+              </button>
+              <button class="quiz-option" data-answer="wrong">
+                Yêu cả đời
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="quiz-navigation">
+          <button class="quiz-btn prev-btn" id="prevBtn" disabled>
+            ⬅️ Câu trước
+          </button>
+          <button class="quiz-btn next-btn" id="nextBtn">Tiếp theo ➡️</button>
+          <button
+            class="quiz-btn submit-btn"
+            id="submitBtn"
+            style="display: none"
+          >
+            🎁 Mở quà!
+          </button>
+        </div>
+
+        <div class="quiz-result" id="quizResult"></div>
+      </div>
+    </div>
 
     <script src="./script.js"></script>
   </body>

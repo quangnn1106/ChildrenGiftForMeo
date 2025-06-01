@@ -171,16 +171,21 @@ function stopGiftBoxRunning() {
     giftContainer.style.alignItems = 'center';
     giftContainer.style.minHeight = '100vh';
 
-    // Ensure pointer events are restored
-    giftBox.style.pointerEvents = 'auto';
-    giftBox.style.cursor = 'pointer';
+    // Keep pointer events disabled until quiz is completed
+    giftBox.style.pointerEvents = 'none';
+    giftBox.style.cursor = 'default';
 
     // Remove transition after animation completes
     setTimeout(() => {
         giftContainer.style.transition = '';
     }, 800);
 
-    console.log('Gift box stopped running, should be clickable now. Has run away once:', hasRunAwayOnce);
+    console.log('Gift box stopped running, showing quiz...');
+
+    // Show quiz after gift box settles
+    setTimeout(() => {
+        showQuiz();
+    }, 1000);
 }
 
 // Create floating hearts
@@ -415,5 +420,238 @@ style.textContent = `
             }
         `;
 document.head.appendChild(style);
+
+// Quiz functionality
+let quizActive = false;
+let currentQuestionIndex = 0;
+let quizAnswers = {};
+let quizAttempts = 0;
+
+const quizData = {
+    1: { type: 'multiple', correctAnswer: '11/06/2002' },
+    2: { type: 'multiple', correctAnswer: '43' },
+    3: { type: 'multiple', correctAnswer: 'Homestay Booking Rooms' },
+    4: { type: 'text', correctAnswer: 'any' }, // Any text is acceptable
+    5: { type: 'multiple', correctAnswer: 'Yêu vai lon' }
+};
+
+function showQuiz() {
+    console.log('Showing quiz...');
+    const quizContainer = document.getElementById('quizContainer');
+    quizContainer.style.display = 'flex';
+    quizActive = true;
+    currentQuestionIndex = 1;
+    quizAnswers = {};
+    quizAttempts++;
+
+    // Reset to first question
+    showQuestion(1);
+    updateNavigationButtons();
+
+    // Clear any previous results
+    document.getElementById('quizResult').innerHTML = '';
+    document.getElementById('quizResult').className = 'quiz-result';
+}
+
+function hideQuiz() {
+    const quizContainer = document.getElementById('quizContainer');
+    quizContainer.style.display = 'none';
+    quizActive = false;
+}
+
+function showQuestion(questionNum) {
+    // Hide all questions
+    document.querySelectorAll('.question-item').forEach(item => {
+        item.classList.remove('active');
+    });
+
+    // Show current question
+    const currentQuestion = document.querySelector(`[data-question="${questionNum}"]`);
+    if (currentQuestion) {
+        currentQuestion.classList.add('active');
+    }
+
+    // Reset option selections for current question
+    const currentOptions = currentQuestion.querySelectorAll('.quiz-option');
+    currentOptions.forEach(option => {
+        option.classList.remove('selected', 'correct', 'wrong');
+    });
+
+    currentQuestionIndex = questionNum;
+    updateNavigationButtons();
+}
+
+function updateNavigationButtons() {
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Previous button
+    prevBtn.disabled = currentQuestionIndex === 1;
+
+    // Next/Submit button logic
+    if (currentQuestionIndex === 5) {
+        nextBtn.style.display = 'none';
+        submitBtn.style.display = 'block';
+    } else {
+        nextBtn.style.display = 'block';
+        submitBtn.style.display = 'none';
+    }
+}
+
+function selectAnswer(questionNum, answer, element) {
+    // Store the answer
+    quizAnswers[questionNum] = answer;
+
+    // Update visual selection for multiple choice
+    if (element) {
+        const currentQuestion = document.querySelector(`[data-question="${questionNum}"]`);
+        const options = currentQuestion.querySelectorAll('.quiz-option');
+        options.forEach(opt => opt.classList.remove('selected'));
+        element.classList.add('selected');
+    }
+}
+
+function validateQuiz() {
+    let allCorrect = true;
+    let incorrectQuestions = [];
+
+    // Check each question
+    for (let i = 1; i <= 5; i++) {
+        const questionData = quizData[i];
+        const userAnswer = quizAnswers[i];
+
+        if (!userAnswer || userAnswer.trim() === '') {
+            allCorrect = false;
+            incorrectQuestions.push(i);
+            continue;
+        }
+
+        if (questionData.type === 'multiple') {
+            if (userAnswer !== questionData.correctAnswer) {
+                allCorrect = false;
+                incorrectQuestions.push(i);
+            }
+        } else if (questionData.type === 'text') {
+            // For text question (love question), any non-empty answer is correct
+            if (userAnswer.trim().length < 3) {
+                allCorrect = false;
+                incorrectQuestions.push(i);
+            }
+        }
+    }
+
+    return { allCorrect, incorrectQuestions };
+}
+
+function handleQuizSubmit() {
+    const validation = validateQuiz();
+    const resultDiv = document.getElementById('quizResult');
+
+    if (validation.allCorrect) {
+        // Correct answers - open gift box
+        resultDiv.innerHTML = '🎉 Chính xác! Em đã trả lời đúng tất cả! 🎉<br>💝 Hộp quà sẽ mở ngay bây giờ! 💝';
+        resultDiv.className = 'quiz-result success';
+
+        setTimeout(() => {
+            hideQuiz();
+            // Trigger gift box opening
+            openGiftBoxDirectly();
+        }, 2000);
+
+    } else {
+        // Wrong answers - show sad message and make gift box run away again
+        const attempts = quizAttempts > 1 ? ` (Lần thử thứ ${quizAttempts})` : '';
+        resultDiv.innerHTML = `😢 Có ${validation.incorrectQuestions.length} câu chưa đúng${attempts}!<br>💔 Hộp quà sẽ chạy trốn lại! Thử lại nhé! 💔`;
+        resultDiv.className = 'quiz-result error';
+
+        // Add screen shake effect
+        document.body.classList.add('screen-shake');
+        setTimeout(() => {
+            document.body.classList.remove('screen-shake');
+        }, 600);
+
+        setTimeout(() => {
+            hideQuiz();
+            // Make gift box run away again
+            resetGiftBoxForNewAttempt();
+        }, 3000);
+    }
+}
+
+function openGiftBoxDirectly() {
+    // Simulate gift box click to open it
+    const giftBoxClickEvent = new Event('click');
+    document.getElementById("giftBox").dispatchEvent(giftBoxClickEvent);
+}
+
+function resetGiftBoxForNewAttempt() {
+    // Reset the gift box state to allow it to run away again
+    hasRunAwayOnce = false;
+    isGiftBoxRunning = false;
+
+    // Ensure gift box is in normal state
+    const giftBox = document.getElementById("giftBox");
+    const giftContainer = document.querySelector(".gift-container");
+
+    giftBox.classList.remove("running");
+    giftBox.style.transform = '';
+    giftBox.style.pointerEvents = 'auto';
+    giftBox.style.cursor = 'pointer';
+
+    // Reset container position
+    giftContainer.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    giftContainer.style.position = 'relative';
+    giftContainer.style.transform = 'none';
+    giftContainer.style.left = 'auto';
+    giftContainer.style.top = 'auto';
+    giftContainer.style.justifyContent = 'center';
+    giftContainer.style.alignItems = 'center';
+    giftContainer.style.minHeight = '100vh';
+
+    setTimeout(() => {
+        giftContainer.style.transition = '';
+    }, 800);
+
+    console.log('Gift box reset for new attempt');
+}
+
+// Event listeners for quiz
+document.addEventListener('DOMContentLoaded', function () {
+    // Quiz option click handlers
+    document.querySelectorAll('.quiz-option').forEach(option => {
+        option.addEventListener('click', function () {
+            const questionItem = this.closest('.question-item');
+            const questionNum = parseInt(questionItem.dataset.question);
+            const answer = this.textContent.trim();
+            selectAnswer(questionNum, answer, this);
+        });
+    });
+
+    // Love input handler
+    const loveInput = document.querySelector('.love-input');
+    if (loveInput) {
+        loveInput.addEventListener('input', function () {
+            selectAnswer(4, this.value, null);
+        });
+    }
+
+    // Navigation buttons
+    document.getElementById('prevBtn').addEventListener('click', function () {
+        if (currentQuestionIndex > 1) {
+            showQuestion(currentQuestionIndex - 1);
+        }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', function () {
+        if (currentQuestionIndex < 5) {
+            showQuestion(currentQuestionIndex + 1);
+        }
+    });
+
+    document.getElementById('submitBtn').addEventListener('click', function () {
+        handleQuizSubmit();
+    });
+});
 
 
